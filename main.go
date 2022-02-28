@@ -8,9 +8,10 @@ import (
 )
 
 var (
-	jwtService     service.JWTService        = service.NewJWTService()
-	authService    service.AuthService       = service.NewAuthService()
-	authController controller.AuthController = controller.NewAuthController(authService, jwtService)
+	jwtService      service.JWTService         = service.NewJWTService()
+	authService     service.AuthService        = service.NewAuthService()
+	authController  controller.AuthController  = controller.NewAuthController(authService, jwtService)
+	imageController controller.ImageController = controller.NewImageController(jwtService)
 )
 
 func main() {
@@ -19,6 +20,11 @@ func main() {
 	authRoutes := r.Group("/auth")
 	{
 		authRoutes.POST("/login", authController.Login)
+	}
+
+	imageRoute := r.Group("/image")
+	{
+		imageRoute.POST("/upload", imageController.UploadImage)
 	}
 
 	r.Run(":3000")

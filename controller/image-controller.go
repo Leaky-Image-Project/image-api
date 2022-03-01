@@ -6,6 +6,7 @@ import (
 	"leaky-image-project/chat-api/helper"
 	"leaky-image-project/chat-api/service"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -33,16 +34,30 @@ func (c *imageController) UploadImage(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, res)
 		return
 	}
+
+	authHeader := ctx.GetHeader("Authorization")
+	_, errToken := c.jwtService.ValidateToken(authHeader)
+	if errToken != nil {
+		panic(errToken.Error())
+	}
+
 	file := imageDTO.ImgData
 	fmt.Print(file.Filename)
-	// authHeader := ctx.GetHeader("Authorization")
-	// _, errToken := c.jwtService.ValidateToken(authHeader)
-	// if errToken != nil {
-	// 	panic(errToken.Error())
-	// }
 
 }
 
 func (c *imageController) DownloadImage(ctx *gin.Context) {
+	authHeader := ctx.GetHeader("Authorization")
+	_, err := c.jwtService.ValidateToken(authHeader)
+	if err != nil {
+		panic(err.Error())
+	}
 
+	id, err := strconv.ParseUint(ctx.Param("id"), 0, 0)
+	if err != nil {
+		res := helper.BuildErrorResponse("No param id was found", err.Error(), helper.EmptyObj{})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, res)
+		return
+	}
+	fmt.Println(id)
 }

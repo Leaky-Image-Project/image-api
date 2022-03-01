@@ -2,6 +2,7 @@ package main
 
 import (
 	"leaky-image-project/chat-api/controller"
+	"leaky-image-project/chat-api/middleware"
 	"leaky-image-project/chat-api/service"
 
 	"github.com/gin-gonic/gin"
@@ -22,9 +23,10 @@ func main() {
 		authRoutes.POST("/login", authController.Login)
 	}
 
-	imageRoute := r.Group("/image")
+	imageRoute := r.Group("/image", middleware.AuthorizeJWT(jwtService))
 	{
 		imageRoute.POST("/upload", imageController.UploadImage)
+		imageRoute.GET("/:id", imageController.DownloadImage)
 	}
 
 	r.Run(":3000")

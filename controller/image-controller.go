@@ -17,12 +17,14 @@ type ImageController interface {
 }
 
 type imageController struct {
-	jwtService service.JWTService
+	imageService service.ImageService
+	jwtService   service.JWTService
 }
 
-func NewImageController(jwtService service.JWTService) ImageController {
+func NewImageController(imageService service.ImageService, jwtService service.JWTService) ImageController {
 	return &imageController{
-		jwtService: jwtService,
+		jwtService:   jwtService,
+		imageService: imageService,
 	}
 }
 
@@ -41,9 +43,9 @@ func (c *imageController) UploadImage(ctx *gin.Context) {
 		panic(errToken.Error())
 	}
 
-	file := imageDTO.ImgData
-	fmt.Print(file.Filename)
-
+	res := c.imageService.Upload(imageDTO)
+	response := helper.BuildResponse(true, "OK", res)
+	ctx.JSON(http.StatusCreated, response)
 }
 
 func (c *imageController) DownloadImage(ctx *gin.Context) {

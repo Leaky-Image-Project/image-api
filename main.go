@@ -11,8 +11,9 @@ import (
 var (
 	jwtService      service.JWTService         = service.NewJWTService()
 	authService     service.AuthService        = service.NewAuthService()
+	imageService    service.ImageService       = service.NewImageService()
 	authController  controller.AuthController  = controller.NewAuthController(authService, jwtService)
-	imageController controller.ImageController = controller.NewImageController(jwtService)
+	imageController controller.ImageController = controller.NewImageController(imageService, jwtService)
 )
 
 func main() {

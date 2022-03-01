@@ -9,10 +9,9 @@ const (
 	PNG  = "png"
 	JPG  = "jpg"
 	JPEG = "jpeg"
-	GIF  = "gif"
 )
 
-var imgType []string = []string{PNG, JPG, JPEG, GIF}
+var imgType []string = []string{PNG, JPG, JPEG}
 
 func GetImgType() []string {
 	return imgType

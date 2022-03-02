@@ -30,8 +30,8 @@ func NewImageController(imageService service.ImageService, jwtService service.JW
 }
 
 func (c *imageController) UploadImage(ctx *gin.Context) {
-	var imageDTO dto.ImageDTO
-	errDTO := ctx.ShouldBind(&imageDTO)
+	var imageUploadDTO dto.ImageUploadDTO
+	errDTO := ctx.ShouldBind(&imageUploadDTO)
 	if errDTO != nil {
 		res := helper.BuildErrorResponse("Failed to process request", errDTO.Error(), helper.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, res)
@@ -44,7 +44,7 @@ func (c *imageController) UploadImage(ctx *gin.Context) {
 		panic(errToken.Error())
 	}
 
-	res := c.imageService.Upload(imageDTO)
+	res := c.imageService.Upload(imageUploadDTO)
 	if (res == entity.ImageInfo{}) {
 		res := helper.BuildErrorResponse("Internal error", "File upload error", helper.EmptyObj{})
 		ctx.JSON(http.StatusNotFound, res)

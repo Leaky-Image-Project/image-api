@@ -2,6 +2,6 @@ package dto
 
 import "mime/multipart"
 
-type ImageDTO struct {
+type ImageUploadDTO struct {
 	ImgData *multipart.FileHeader `form:"img_data" binding:"required"`
 }

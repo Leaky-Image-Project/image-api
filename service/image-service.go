@@ -15,7 +15,7 @@ import (
 )
 
 type ImageService interface {
-	Upload(i dto.ImageDTO) entity.ImageInfo
+	Upload(i dto.ImageUploadDTO) entity.ImageInfo
 }
 
 type imageService struct {
@@ -25,7 +25,7 @@ func NewImageService() ImageService {
 	return &imageService{}
 }
 
-func (service *imageService) Upload(i dto.ImageDTO) entity.ImageInfo {
+func (service *imageService) Upload(i dto.ImageUploadDTO) entity.ImageInfo {
 	fileHeader := i.ImgData
 	fmt.Print(fileHeader.Filename)
 

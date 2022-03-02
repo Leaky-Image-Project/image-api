@@ -35,4 +35,8 @@ uri param
     :id
 ```
 
+## Limitations
+We would cover this in the report
+* we jwt token does not support "logout", we could achieves this by creating a blacklist, but it is out of this research scope
+* login credentials are plain texts hardcoded in the file, still, just for simplicity we choose to hardcode them.
 

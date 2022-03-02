@@ -15,7 +15,7 @@ import (
 )
 
 type ImageService interface {
-	Upload(i dto.ImageDTO) entity.Image
+	Upload(i dto.ImageDTO) entity.ImageInfo
 }
 
 type imageService struct {
@@ -25,14 +25,14 @@ func NewImageService() ImageService {
 	return &imageService{}
 }
 
-func (service *imageService) Upload(i dto.ImageDTO) entity.Image {
+func (service *imageService) Upload(i dto.ImageDTO) entity.ImageInfo {
 	fileHeader := i.ImgData
 	fmt.Print(fileHeader.Filename)
 
 	file, err := fileHeader.Open()
 	if err != nil {
 		// TODO: check file IO error
-		return entity.Image{}
+		return entity.ImageInfo{}
 	}
 	defer file.Close()
 
@@ -41,18 +41,18 @@ func (service *imageService) Upload(i dto.ImageDTO) entity.Image {
 	image, imageType, err := image.Decode(bufFile)
 	if err != nil {
 		// TODO: check decode err
-		return entity.Image{}
+		return entity.ImageInfo{}
 	}
 
 	if !helper.HasType(imageType) {
 		// TODO: check supported type
-		return entity.Image{}
+		return entity.ImageInfo{}
 	}
 
 	_, err = file.Seek(0, 0)
 	if err != nil {
 		// TODO: check moving position
-		return entity.Image{}
+		return entity.ImageInfo{}
 	}
 
 	md5Hash := md5.New()
@@ -61,7 +61,7 @@ func (service *imageService) Upload(i dto.ImageDTO) entity.Image {
 
 	if err != nil {
 		//TODO: md5 encoding
-		return entity.Image{}
+		return entity.ImageInfo{}
 	}
 
 	fileMd5Fx := md5Hash.Sum(nil)
@@ -75,14 +75,14 @@ func (service *imageService) Upload(i dto.ImageDTO) entity.Image {
 		err = os.MkdirAll(dirPath, 0755)
 		if err != nil {
 			// TODO: file path err
-			return entity.Image{}
+			return entity.ImageInfo{}
 		}
 	} else {
 		if !dirInfo.IsDir() {
 			err = os.MkdirAll(dirPath, 0755)
 			if err != nil {
 				// TODO: file path err
-				return entity.Image{}
+				return entity.ImageInfo{}
 			}
 		}
 	}
@@ -92,7 +92,7 @@ func (service *imageService) Upload(i dto.ImageDTO) entity.Image {
 		file, err := os.OpenFile(filePath, os.O_CREATE|os.O_WRONLY, 0755)
 		if err != nil {
 			// TODO: file err
-			return entity.Image{}
+			return entity.ImageInfo{}
 		}
 		defer file.Close()
 
@@ -104,11 +104,11 @@ func (service *imageService) Upload(i dto.ImageDTO) entity.Image {
 
 		if err != nil {
 			// TODO: encoding error
-			return entity.Image{}
+			return entity.ImageInfo{}
 		}
 	}
 
-	return entity.Image{
+	return entity.ImageInfo{
 		Id:   fileMd5,
 		Size: fileHeader.Size,
 		Mime: imageType,

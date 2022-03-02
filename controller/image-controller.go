@@ -45,7 +45,7 @@ func (c *imageController) UploadImage(ctx *gin.Context) {
 	}
 
 	res := c.imageService.Upload(imageDTO)
-	if (res == entity.Image{}) {
+	if (res == entity.ImageInfo{}) {
 		res := helper.BuildErrorResponse("Internal error", "File upload error", helper.EmptyObj{})
 		ctx.JSON(http.StatusNotFound, res)
 	} else {

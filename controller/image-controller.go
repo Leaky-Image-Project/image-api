@@ -1,13 +1,13 @@
 package controller
 
 import (
-	"fmt"
+	"io"
 	"leaky-image-project/chat-api/dto"
 	"leaky-image-project/chat-api/entity"
 	"leaky-image-project/chat-api/helper"
 	"leaky-image-project/chat-api/service"
 	"net/http"
-	"strconv"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -55,17 +55,27 @@ func (c *imageController) UploadImage(ctx *gin.Context) {
 }
 
 func (c *imageController) DownloadImage(ctx *gin.Context) {
+	var imageDownloadDTO dto.ImageDownloadDTO
+	errDto := ctx.ShouldBindUri(&imageDownloadDTO)
+	if errDto != nil {
+		res := helper.BuildErrorResponse("No param id was found", errDto.Error(), helper.EmptyObj{})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, res)
+		return
+	}
+
 	authHeader := ctx.GetHeader("Authorization")
 	_, err := c.jwtService.ValidateToken(authHeader)
 	if err != nil {
 		panic(err.Error())
 	}
 
-	id, err := strconv.ParseUint(ctx.Param("id"), 0, 0)
+	filePath := helper.UrlParse(imageDownloadDTO.Id)
+	file, err := os.Open(filePath)
 	if err != nil {
-		res := helper.BuildErrorResponse("No param id was found", err.Error(), helper.EmptyObj{})
+		res := helper.BuildErrorResponse("File not exist", err.Error(), helper.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, res)
 		return
 	}
-	fmt.Println(id)
+
+	io.Copy(ctx.Writer, file)
 }

@@ -32,6 +32,7 @@ func (service *imageService) Upload(i dto.ImageDTO) entity.Image {
 	file, err := fileHeader.Open()
 	if err != nil {
 		// TODO: check file IO error
+		return entity.Image{}
 	}
 	defer file.Close()
 
@@ -40,15 +41,18 @@ func (service *imageService) Upload(i dto.ImageDTO) entity.Image {
 	image, imageType, err := image.Decode(bufFile)
 	if err != nil {
 		// TODO: check decode err
+		return entity.Image{}
 	}
 
 	if !helper.HasType(imageType) {
 		// TODO: check supported type
+		return entity.Image{}
 	}
 
 	_, err = file.Seek(0, 0)
 	if err != nil {
 		// TODO: check moving position
+		return entity.Image{}
 	}
 
 	md5Hash := md5.New()
@@ -57,6 +61,7 @@ func (service *imageService) Upload(i dto.ImageDTO) entity.Image {
 
 	if err != nil {
 		//TODO: md5 encoding
+		return entity.Image{}
 	}
 
 	fileMd5Fx := md5Hash.Sum(nil)
@@ -70,12 +75,14 @@ func (service *imageService) Upload(i dto.ImageDTO) entity.Image {
 		err = os.MkdirAll(dirPath, 0755)
 		if err != nil {
 			// TODO: file path err
+			return entity.Image{}
 		}
 	} else {
 		if !dirInfo.IsDir() {
 			err = os.MkdirAll(dirPath, 0755)
 			if err != nil {
 				// TODO: file path err
+				return entity.Image{}
 			}
 		}
 	}
@@ -85,6 +92,7 @@ func (service *imageService) Upload(i dto.ImageDTO) entity.Image {
 		file, err := os.OpenFile(filePath, os.O_CREATE|os.O_WRONLY, 0755)
 		if err != nil {
 			// TODO: file err
+			return entity.Image{}
 		}
 		defer file.Close()
 
@@ -96,6 +104,7 @@ func (service *imageService) Upload(i dto.ImageDTO) entity.Image {
 
 		if err != nil {
 			// TODO: encoding error
+			return entity.Image{}
 		}
 	}
 

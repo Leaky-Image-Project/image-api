@@ -3,6 +3,7 @@ package controller
 import (
 	"fmt"
 	"leaky-image-project/chat-api/dto"
+	"leaky-image-project/chat-api/entity"
 	"leaky-image-project/chat-api/helper"
 	"leaky-image-project/chat-api/service"
 	"net/http"
@@ -44,8 +45,13 @@ func (c *imageController) UploadImage(ctx *gin.Context) {
 	}
 
 	res := c.imageService.Upload(imageDTO)
-	response := helper.BuildResponse(true, "OK", res)
-	ctx.JSON(http.StatusCreated, response)
+	if (res == entity.Image{}) {
+		res := helper.BuildErrorResponse("Internal error", "File upload error", helper.EmptyObj{})
+		ctx.JSON(http.StatusNotFound, res)
+	} else {
+		response := helper.BuildResponse(true, "OK", res)
+		ctx.JSON(http.StatusCreated, response)
+	}
 }
 
 func (c *imageController) DownloadImage(ctx *gin.Context) {

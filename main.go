@@ -5,6 +5,8 @@ import (
 	"leaky-image-project/chat-api/middleware"
 	"leaky-image-project/chat-api/service"
 
+	"github.com/gin-contrib/cors"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,6 +20,7 @@ var (
 
 func main() {
 	r := gin.Default()
+	r.Use(cors.Default())
 
 	authRoutes := r.Group("/auth")
 	{
@@ -30,5 +33,5 @@ func main() {
 		imageRoute.GET("/:id", imageController.DownloadImage)
 	}
 
-	r.Run(":3000")
+	r.Run(":3030")
 }

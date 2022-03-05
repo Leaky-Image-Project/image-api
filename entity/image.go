@@ -1,6 +1,6 @@
 package entity
 
-type Image struct {
+type ImageInfo struct {
 	Id   string
 	Size int64
 	Mime string

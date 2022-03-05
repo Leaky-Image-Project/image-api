@@ -1,12 +1,12 @@
 package controller
 
 import (
-	"fmt"
+	"io"
 	"leaky-image-project/chat-api/dto"
 	"leaky-image-project/chat-api/helper"
 	"leaky-image-project/chat-api/service"
 	"net/http"
-	"strconv"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -29,8 +29,8 @@ func NewImageController(imageService service.ImageService, jwtService service.JW
 }
 
 func (c *imageController) UploadImage(ctx *gin.Context) {
-	var imageDTO dto.ImageDTO
-	errDTO := ctx.ShouldBind(&imageDTO)
+	var imageUploadDTO dto.ImageUploadDTO
+	errDTO := ctx.ShouldBind(&imageUploadDTO)
 	if errDTO != nil {
 		res := helper.BuildErrorResponse("Failed to process request", errDTO.Error(), helper.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, res)
@@ -43,23 +43,38 @@ func (c *imageController) UploadImage(ctx *gin.Context) {
 		panic(errToken.Error())
 	}
 
-	res := c.imageService.Upload(imageDTO)
-	response := helper.BuildResponse(true, "OK", res)
-	ctx.JSON(http.StatusCreated, response)
+	res, err := c.imageService.Upload(imageUploadDTO)
+	if err != nil {
+		res := helper.BuildErrorResponse("Internal error", err.Error(), helper.EmptyObj{})
+		ctx.JSON(http.StatusNotFound, res)
+	} else {
+		response := helper.BuildResponse(true, "OK", res)
+		ctx.JSON(http.StatusCreated, response)
+	}
 }
 
 func (c *imageController) DownloadImage(ctx *gin.Context) {
+	var imageDownloadDTO dto.ImageDownloadDTO
+	errDto := ctx.ShouldBindUri(&imageDownloadDTO)
+	if errDto != nil {
+		res := helper.BuildErrorResponse("No param id was found", errDto.Error(), helper.EmptyObj{})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, res)
+		return
+	}
+
 	authHeader := ctx.GetHeader("Authorization")
 	_, err := c.jwtService.ValidateToken(authHeader)
 	if err != nil {
 		panic(err.Error())
 	}
 
-	id, err := strconv.ParseUint(ctx.Param("id"), 0, 0)
+	filePath := helper.UrlParse(imageDownloadDTO.Id)
+	file, err := os.Open(filePath)
 	if err != nil {
-		res := helper.BuildErrorResponse("No param id was found", err.Error(), helper.EmptyObj{})
+		res := helper.BuildErrorResponse("File not exist", err.Error(), helper.EmptyObj{})
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, res)
 		return
 	}
-	fmt.Println(id)
+
+	io.Copy(ctx.Writer, file)
 }

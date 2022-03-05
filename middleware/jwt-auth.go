@@ -14,7 +14,8 @@ import (
 //AuthorizeJWT validates the token user given, return 401 if not valid
 func AuthorizeJWT(jwtService service.JWTService) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		authHeader := c.GetHeader("Authorization")
+		// authHeader := c.GetHeader("Authorization")
+		authHeader, err := c.Cookie("token")
 		if authHeader == "" {
 			response := helper.BuildErrorResponse("Failed to process request", "No token found", nil)
 			c.AbortWithStatusJSON(http.StatusBadRequest, response)

@@ -37,7 +37,8 @@ func (c *imageController) UploadImage(ctx *gin.Context) {
 		return
 	}
 
-	authHeader := ctx.GetHeader("Authorization")
+	// authHeader := ctx.GetHeader("Authorization")
+	authHeader, _ := ctx.Cookie("token")
 	_, errToken := c.jwtService.ValidateToken(authHeader)
 	if errToken != nil {
 		panic(errToken.Error())
@@ -62,7 +63,8 @@ func (c *imageController) DownloadImage(ctx *gin.Context) {
 		return
 	}
 
-	authHeader := ctx.GetHeader("Authorization")
+	// authHeader := ctx.GetHeader("Authorization")
+	authHeader, _ := ctx.Cookie("token")
 	_, err := c.jwtService.ValidateToken(authHeader)
 	if err != nil {
 		panic(err.Error())

@@ -36,7 +36,7 @@ func JoinPath(md5_str string) string {
 
 	var str = strings.Builder{}
 
-	str.WriteString(PathImg())
+	str.WriteString("img/") // path where to store the image
 	str.WriteString(sortPath)
 	str.WriteString("/")
 	str.WriteString(md5_str)

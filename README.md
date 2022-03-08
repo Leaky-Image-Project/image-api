@@ -1,8 +1,7 @@
-# chat-api
-
+# image-api
 
 ## Prerequisite 
-You have to the go runtime version later than 1.2, so download the newest version
+You have to the go runtime version later than 1.12, so download the newest version
 ## Run Project
 ```
 go run main.go
@@ -25,7 +24,7 @@ body
 
 body
 ```
-    file (png, jpeg, jpg)
+    image_data: multipart (png, jpeg, jpg)
 ```
 
 **download**: `http://localhost:3000/image/:id`

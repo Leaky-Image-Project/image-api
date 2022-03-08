@@ -28,8 +28,6 @@ func NewImageService() ImageService {
 
 func (service *imageService) Upload(i dto.ImageUploadDTO) (entity.ImageInfo, error) {
 	fileHeader := i.ImgData
-	fmt.Print(fileHeader.Filename)
-
 	file, err := fileHeader.Open()
 	if err != nil {
 		// TODO: check file IO error

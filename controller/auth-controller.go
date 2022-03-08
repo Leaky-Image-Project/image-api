@@ -38,6 +38,7 @@ func (c *authController) Login(ctx *gin.Context) {
 	isAuthenticated := c.authService.Login(credentials.Username, credentials.Password)
 	if isAuthenticated {
 		generatedToken := c.jwtService.GenerateToken(credentials.Username)
+		ctx.SetCookie("token", generatedToken, 3600, "/", "localhost", false, true)
 		response := helper.BuildResponse(true, "OK!", generatedToken)
 		ctx.JSON(http.StatusOK, response)
 		return

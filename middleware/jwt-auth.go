@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -16,6 +17,7 @@ func AuthorizeJWT(jwtService service.JWTService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// authHeader := c.GetHeader("Authorization")
 		authHeader, err := c.Cookie("token")
+		fmt.Println("head" + authHeader)
 		if authHeader == "" {
 			response := helper.BuildErrorResponse("Failed to process request", "No token found", nil)
 			c.AbortWithStatusJSON(http.StatusBadRequest, response)

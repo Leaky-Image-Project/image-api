@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"leaky-image-project/chat-api/dto"
-	"leaky-image-project/chat-api/helper"
-	"leaky-image-project/chat-api/service"
+	"leaky-image-project/image-api/dto"
+	"leaky-image-project/image-api/helper"
+	"leaky-image-project/image-api/service"
 	"net/http"
 
 	"github.com/gin-gonic/gin"

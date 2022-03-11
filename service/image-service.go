@@ -9,9 +9,9 @@ import (
 	"image/jpeg"
 	"image/png"
 	"io"
-	"leaky-image-project/chat-api/dto"
-	"leaky-image-project/chat-api/entity"
-	"leaky-image-project/chat-api/helper"
+	"leaky-image-project/image-api/dto"
+	"leaky-image-project/image-api/entity"
+	"leaky-image-project/image-api/helper"
 	"os"
 )
 

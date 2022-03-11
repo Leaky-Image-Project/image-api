@@ -7,8 +7,8 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 
-	"leaky-image-project/chat-api/helper"
-	"leaky-image-project/chat-api/service"
+	"leaky-image-project/image-api/helper"
+	"leaky-image-project/image-api/service"
 )
 
 //AuthorizeJWT validates the token user given, return 401 if not valid

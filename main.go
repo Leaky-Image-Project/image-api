@@ -1,9 +1,9 @@
 package main
 
 import (
-	"leaky-image-project/chat-api/controller"
-	"leaky-image-project/chat-api/middleware"
-	"leaky-image-project/chat-api/service"
+	"leaky-image-project/image-api/controller"
+	"leaky-image-project/image-api/middleware"
+	"leaky-image-project/image-api/service"
 
 	"github.com/gin-gonic/gin"
 )

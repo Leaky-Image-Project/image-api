@@ -1,4 +1,4 @@
-module leaky-image-project/chat-api
+module leaky-image-project/image-api
 
 go 1.17
 

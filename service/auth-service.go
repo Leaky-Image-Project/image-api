@@ -1,7 +1,7 @@
 package service
 
 import (
-	"leaky-image-project/chat-api/entity"
+	"leaky-image-project/image-api/entity"
 )
 
 type AuthService interface {

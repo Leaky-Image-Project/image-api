@@ -35,6 +35,7 @@ func main() {
 	authRoutes := r.Group("/auth")
 	{
 		authRoutes.POST("/login", authController.Login)
+		authRoutes.POST("/logout", authController.Logout)
 	}
 
 	imageRoute := r.Group("/image", middleware.AuthorizeJWT(jwtService))

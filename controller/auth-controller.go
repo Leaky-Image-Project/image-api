@@ -12,6 +12,7 @@ import (
 //AuthController interface is a contract what this controller can do
 type AuthController interface {
 	Login(ctx *gin.Context)
+	Logout(ctx *gin.Context)
 }
 
 type authController struct {
@@ -46,4 +47,11 @@ func (c *authController) Login(ctx *gin.Context) {
 
 	response := helper.BuildErrorResponse("Please check again your credential", "Invalid Credential", helper.EmptyObj{})
 	ctx.AbortWithStatusJSON(http.StatusUnauthorized, response)
+}
+
+func (c *authController) Logout(ctx *gin.Context) {
+	// a fake logout just delete the cookie
+	ctx.SetCookie("token", "", -1, "/", "localhost", false, true)
+	response := helper.BuildResponse(true, "OK!", "Token has been deleted")
+	ctx.JSON(http.StatusOK, response)
 }
